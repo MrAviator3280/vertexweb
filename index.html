@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex - Oxford Response Roleplay Bot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom CSS Variables for easy color changes */
+        :root {
+            --color-primary: #A61B1B; /* Deep Red */
+            --color-secondary: #D0D0D0; /* Light Grey */
+            --color-background: #1A1A1A; /* Dark Background */
+            --color-text-main: #FFFFFF; /* White Text */
+            --color-text-subtle: #999999; /* Grey Text */
+            --font-family-main: 'Poppins', sans-serif;
+        }
+
+        /* Global Reset and Typography */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-main);
+            background-color: var(--color-background);
+            color: var(--color-text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Header and Navigation */
+        header {
+            background-color: var(--color-background);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--color-text-main);
+        }
+
+        .logo img {
+            height: 40px; /* Adjust size of the logo image */
+            margin-right: 10px;
+        }
+
+        nav a {
+            color: var(--color-text-subtle);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--color-text-main);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-text-main);
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            border: 2px solid var(--color-primary);
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #8C1616; /* Slightly darker red */
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: none;
+            color: var(--color-text-main);
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: 2px solid var(--color-text-main);
+            margin-left: 15px;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-large {
+            padding: 12px 30px;
+            font-size: 1.1em;
+        }
+
+
+        /* Hero Section */
+        #hero {
+            background: linear-gradient(135deg, var(--color-background) 0%, #290505 100%);
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        #hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+        }
+
+        #hero .tagline {
+            font-size: 1.2em;
+            color: var(--color-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .cta-buttons a {
+            margin: 0 10px;
+        }
+
+        /* Features Section */
+        #features, #about {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        #features h2, #about h2 {
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            color: var(--color-primary);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background-color: #282828;
+            padding: 30px;
+            border-radius: 10px;
+            border-top: 5px solid var(--color-primary); /* Red accent on top */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card .icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: var(--color-primary);
+        }
+
+        .feature-card p {
+            color: var(--color-text-subtle);
+        }
+
+        /* About Section */
+        #about p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1em;
+            color: var(--color-secondary);
+        }
+
+
+        /* Footer */
+        footer {
+            background-color: #111111;
+            color: var(--color-text-subtle);
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav {
+                margin-top: 15px;
+            }
+
+            nav a {
+                margin: 0 10px;
+                display: inline-block;
+            }
+
+            .btn-primary {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            #hero h1 {
+                font-size: 2.5em;
+            }
+
+            .cta-buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-large {
+                width: 80%;
+                margin: 10px 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="Vertex_Logo_Red_Small.png" alt="Vertex Logo">
+                <span>Vertex</span>
+            </div>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#about">About</a>
+                <a href="https://discord.com/oauth2/authorize?client_id=1449922898629234762" class="btn-primary">Invite Bot</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container">
+            <h1>Elevate Your Oxford Roleplay Experience.</h1>
+            <p class="tagline">Vertex is the essential Discord bot designed specifically for managing and enhancing Oxford Response Roleplay communities.</p>
+            <div class="cta-buttons">
+                <a href="https://discord.com/oauth2/authorize?client_id=1449922898629234762" class="btn-primary btn-large">Invite Vertex Now</a>
+                <a href="#" class="btn-secondary btn-large">View Commands (SOON) </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="container">
+            <h2>Core Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="icon">🛡</i>
+                    <h3>Oxford Response Integration</h3>
+                    <p>Manage your ingame server from your discord with ease.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="icon">📈</i>
+                    <h3>Statistics & Logging</h3>
+                    <p>Keep detailed records of roleplay activity, generating valuable insights for your community leadership.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="icon">⚙️</i>
+                    <h3>Custom Configuration</h3>
+                    <p>Tailor the bot's responses, prefixes, and role permissions to perfectly fit your server's needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <h2>Built by Roleplayers, for Roleplayers.</h2>
+            <p>We understand the complexities of running a realistic response roleplay community. Vertex was developed to automate the mundane and let you focus on what truly matters: an immersive roleplay experience.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Vertex. All rights reserved. | Discord Bot</p>
+        </div>
+    </footer>
+
+</body>
+</html>
