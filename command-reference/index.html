@@ -1,0 +1,345 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex - Command Reference</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom CSS Variables for easy color changes */
+        :root {
+            --color-primary: #A61B1B; /* Deep Red */
+            --color-secondary: #D0D0D0; /* Light Grey */
+            --color-background: #1A1A1A; /* Dark Background */
+            --color-background-light: #282828; /* Feature/Command Card Background */
+            --color-text-main: #FFFFFF; /* White Text */
+            --color-text-subtle: #999999; /* Grey Text */
+            --font-family-main: 'Poppins', sans-serif;
+            --color-code-bg: #333333; /* Darker background for code */
+            --color-code-text: #FFD700; /* Gold/Yellow for command text */
+        }
+
+        /* Global Reset and Typography */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-main);
+            background-color: var(--color-background);
+            color: var(--color-text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Header and Navigation (Reused) */
+        header {
+            background-color: var(--color-background);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--color-text-main);
+        }
+
+        .logo img {
+            height: 40px; 
+            margin-right: 10px;
+        }
+
+        nav a {
+            color: var(--color-text-subtle);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--color-text-main);
+        }
+
+        /* Button Styles (Reused) */
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-text-main);
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            border: 2px solid var(--color-primary);
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #8C1616;
+            transform: translateY(-2px);
+        }
+
+        /* Command Section Styling */
+        #commands {
+            padding: 80px 0;
+        }
+
+        #commands h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: var(--color-primary);
+        }
+        
+        #commands p.intro {
+            text-align: center;
+            font-size: 1.1em;
+            color: var(--color-secondary);
+            margin-bottom: 60px;
+        }
+
+        .command-group {
+            margin-bottom: 50px;
+        }
+
+        .command-group h2 {
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 5px;
+            margin-bottom: 25px;
+            color: var(--color-text-main);
+        }
+
+        .command-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px; /* Spacing between rows */
+        }
+
+        .command-table th, .command-table td {
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .command-table th {
+            color: var(--color-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .command-table tr {
+            background-color: var(--color-background-light);
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .command-table tr:hover {
+            background-color: #383838;
+        }
+
+        .command-syntax {
+            font-family: monospace;
+            background-color: var(--color-code-bg);
+            color: var(--color-code-text);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            white-space: nowrap;
+        }
+        
+        .command-description {
+            color: var(--color-text-subtle);
+        }
+
+        /* Footer (Reused) */
+        footer {
+            background-color: #111111;
+            color: var(--color-text-subtle);
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav {
+                margin-top: 15px;
+            }
+
+            nav a {
+                margin: 0 10px;
+                display: inline-block;
+            }
+            
+            #commands {
+                padding: 40px 0;
+            }
+            
+            #commands h1 {
+                font-size: 2em;
+            }
+
+            .command-table, .command-table tbody, .command-table tr, .command-table td {
+                display: block;
+                width: 100%;
+            }
+            
+            .command-table thead {
+                display: none; /* Hide header on small screens */
+            }
+
+            .command-table tr {
+                margin-bottom: 20px;
+                border: 1px solid #444;
+            }
+            
+            .command-table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            
+            .command-table td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: 700;
+                color: var(--color-primary);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="Vertex_Logo_Red_Small.png" alt="Vertex Logo">
+                <span>Vertex</span>
+            </div>
+            <nav>
+                <a href="index.html">Home</a> 
+                <a href="#commands">Commands</a>
+                <a href="index.html#features">Features</a>
+                <a href="#" class="btn-primary">Invite Bot</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="commands">
+        <div class="container">
+            <h1>Command Reference</h1>
+            <p class="intro">Here is a detailed list of all commands for Vertex, designed for efficient Oxford Response Roleplay management.</p>
+
+            <div class="command-group">
+                <h2>🚨 In-game commands</h2>
+                <table class="command-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Usage Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Command"><span class="command-syntax">/oxfd info</span></td>
+                            <td data-label="Description" class="command-description">Sends the Private Server information of the GUILD.</td>
+                            <td data-label="Usage Example"><span class="command-syntax">/oxfd info</span></td>
+                        </tr>
+                    
+                        <tr>
+                            <td data-label="Command"><span class="command-syntax">/oxfd vehicles</span></td>
+                            <td data-label="Description" class="command-description">Send's the list of vehicle  that are currently spawned inside the Private Server.</td>
+                            <td data-label="Usage Example"><span class="command-syntax">/oxfd vehicles</span></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Command"><span class="command-syntax">/oxfd command</span></td>
+                            <td data-label="Description" class="command-description">Executes a command directly from the bot on the Private Server.</td>
+                            <td data-label="Usage Example"><span class="command-syntax">/oxfd command: announce Hi!</span></td>
+                        </tr>
+<tr>
+                            <td data-label="Command"><span class="command-syntax">/oxfd modcalls</span></td>
+                            <td data-label="Description" class="command-description">Sends the recent modcalls executed inside the private server.</td>
+                            <td data-label="Usage Example"><span class="command-syntax">/oxfd modcalls</span></td>
+                        </tr>
+                        
+                        <tr>
+                            <td data-label="Command"><span class="command-syntax">/oxfd players</span></td>
+                            <td data-label="Description" class="command-description">Sends the list of player currently in the server with their Teams.</td>
+                            <td data-label="Usage Example"><span class="command-syntax">/oxfd players</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            
+            
+            <div class="command-group">
+                <h2>⚙️ Utility &amp; Config Commands</h2>
+                <table class="command-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Usage Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Command"><span class="command-syntax">/api setup</span></td>
+                            <td data-label="Description" class="command-description">Prompts the user a screen to wether reset the keys or set the keys of a Private Server.</td>
+                            <td data-label="Usage Example"><span class="command-syntax">/setup api</span></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Command"><span class="command-syntax">/ping</span></td>
+                            <td data-label="Description" class="command-description">Shows the latency of the bot.</td>
+                            <td data-label="Usage Example"><span class="command-syntax">/ping</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <a href="#" class="btn-primary btn-large">Invite Vertex Now and Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Vertex. All rights reserved. | Discord Bot</p>
+        </div>
+    </footer>
+
+
+</body></html>
