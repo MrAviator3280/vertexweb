@@ -115,7 +115,8 @@
             log(`CALLing POST: ${cleanCmd}...`, "log-info");
 
             try {
-                const response = await fetch('https://api.oxfd.re/v1/server/command', {
+// Replace the fetch line with this:
+const response = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.oxfd.re/v1/server/command'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
