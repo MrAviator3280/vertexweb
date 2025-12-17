@@ -140,7 +140,7 @@ app.post('/api/execute-command', async (req, res) => {
 // Protect the dashboard path
 app.get('/testingmadness/dashboard.html', (req, res, next) => {
     if (req.isAuthenticated()) {
-        res.sendFile(path.join(__dirname, 'public/testingmadness/dashboard.html'));
+        res.sendFile(path.join(__dirname, '/testingmadness/dashboard.html'));
     } else {
         res.redirect('/login');
     }
