@@ -10,9 +10,9 @@ const app = express();
 
 // --- CONFIGURATION ---
 const PORT = 3000;
-const DISCORD_CLIENT_ID = 'YOUR_CLIENT_ID';
-const DISCORD_CLIENT_SECRET = 'YOUR_CLIENT_SECRET';
-const DISCORD_CALLBACK_URL = `http://localhost:${PORT}/callback`;
+const DISCORD_CLIENT_ID = '1449920915981733948';
+const DISCORD_CLIENT_SECRET = '-vI11L4jmkzKJJiglLMYnV2RmKb1Zf3Y';
+const DISCORD_CALLBACK_URL = `https://vertexbot.co.uk/callback`;
 
 // --- MYSQL CONNECTION ---
 const pool = mysql.createPool({
