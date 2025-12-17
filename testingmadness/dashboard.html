@@ -2,90 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Vertex - Management Dashboard</title>
+    <title>Vertex - Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #A61B1B; --bg: #0F0F0F; --card: #161616; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: white; padding: 20px; }
-        .server-select { padding: 10px; background: var(--card); color: white; border: 1px solid #333; border-radius: 5px; width: 100%; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--card); border-radius: 8px; overflow: hidden; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #222; }
-        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-right: 5px; }
-        .btn-kick { background: #ffa502; color: black; }
-        .btn-ban { background: var(--primary); color: white; }
+        :root { --red: #A61B1B; --bg: #0F0F0F; --card: #161616; --text: #fff; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding: 40px; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border-top: 4px solid var(--red); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        select { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 6px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: var(--red); padding: 12px; font-size: 0.8rem; text-transform: uppercase; background: #1a1a1a; }
+        td { padding: 12px; border-bottom: 1px solid #222; }
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.75rem; }
+        .btn-kick { background: #ffa502; color: #000; margin-right: 5px; }
+        .btn-ban { background: var(--red); color: #fff; }
+        .log { margin-top: 20px; font-family: monospace; font-size: 0.8rem; color: #888; height: 60px; overflow-y: auto; background: #000; padding: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <h2>Vertex <span style="color: var(--primary)">Modview</span></h2>
+    <div class="card" style="max-width: 900px; margin: auto;">
+        <h2 style="margin-top:0;">Vertex <span style="color:var(--red)">Modview</span></h2>
+        
+        <label>Select Server</label>
+        <select id="serverSelect" onchange="loadPlayers(this.value)">
+            <option value="">-- Select Managed Guild --</option>
+        </select>
 
-    <label>Active Management Server:</label>
-    <select id="serverList" class="server-select" onchange="loadPlayers(this.value)">
-        <option value="">Select a server you manage...</option>
-    </select>
+        <table id="playerTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Team</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="playerBody"></tbody>
+        </table>
 
-    <table id="playerTable" style="display:none;">
-        <thead>
-            <tr>
-                <th>Roblox User</th>
-                <th>Team</th>
-                <th>Callsign</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="playerBody"></tbody>
-    </table>
+        <div class="log" id="logBox">System ready. Select a server to begin monitoring.</div>
+    </div>
 
     <script>
-        // On Page Load: Get manageable servers
+        let activeGuild = "";
+
         async function init() {
             const res = await fetch('/api/user-servers');
             const servers = await res.json();
-            const select = document.getElementById('serverList');
-            
-            servers.forEach(s => {
-                select.innerHTML += `<option value="${s.id}">${s.name}</option>`;
-            });
+            const select = document.getElementById('serverSelect');
+            servers.forEach(s => { select.innerHTML += `<option value="${s.id}">${s.name}</option>`; });
         }
 
         async function loadPlayers(guildId) {
-            if(!guildId) return;
-            document.getElementById('playerTable').style.display = "table";
+            if (!guildId) return;
+            activeGuild = guildId;
+            document.getElementById('playerTable').style.display = 'table';
             
-            const res = await fetch(`/api/players/${guildId}`);
-            const players = await res.json(); //
-            const tbody = document.getElementById('playerBody');
-            
-            tbody.innerHTML = players.map(p => `
-                <tr>
-                    <td><strong>${p.Username}</strong><br><small>${p.DisplayName}</small></td>
-                    <td>${p.Team}</td>
-                    <td>${p.Callsign || 'N/A'}</td>
-                    <td>
-                        <button class="btn btn-kick" onclick="executeMod('kick', '${p.Username}')">Kick</button>
-                        <button class="btn btn-ban" onclick="executeMod('ban', '${p.Username}')">Ban</button>
-                    </td>
-                </tr>
-            `).join('');
+            try {
+                const res = await fetch(`/api/players/${guildId}`);
+                const players = await res.json();
+                const tbody = document.getElementById('playerBody');
+                
+                tbody.innerHTML = players.map(p => `
+                    <tr>
+                        <td><strong>${p.Username}</strong></td>
+                        <td>${p.Team}</td>
+                        <td>
+                            <button class="btn btn-kick" onclick="runCmd('kick', '${p.Username}')">Kick</button>
+                            <button class="btn btn-ban" onclick="runCmd('ban', '${p.Username}')">Ban</button>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('logBox').innerHTML += `<div>[${new Date().toLocaleTimeString()}] Updated player list.</div>`;
+            } catch (e) { console.error(e); }
         }
 
-        async function executeMod(type, username) {
-            const guildId = document.getElementById('serverList').value;
-            const reason = prompt(`Enter ${type} reason for ${username}:`);
+        async function runCmd(type, user) {
+            const reason = prompt(`Reason for ${type} ${user}:`);
             if (!reason) return;
 
             const res = await fetch('/api/execute-command', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ guildId, type, targetUser: username, reason })
+                body: JSON.stringify({ guildId: activeGuild, type, targetUser: user, reason })
             });
 
-            const result = await res.json();
-            alert(result.message || "Error");
-            loadPlayers(guildId); // Refresh table
+            if (res.ok) {
+                alert(`Successfully sent command: ${type} ${user}`);
+                loadPlayers(activeGuild);
+            }
         }
 
         init();
+        setInterval(() => { if(activeGuild) loadPlayers(activeGuild) }, 15000); // Auto-refresh 15s
     </script>
 </body>
 </html>
