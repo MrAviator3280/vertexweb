@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex - Community Form</title>
+    <title>Vertex - Tester Application</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -133,27 +133,21 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="department">Select Department <span class="required-star">*</span></label>
-                    <select id="department" name="Department" required>
-                        <option value="" disabled selected>Choose an option...</option>
-                        <option value="Police">Oxford Police</option>
-                        <option value="Fire">Fire & Rescue</option>
-                        <option value="Ambulance">Ambulance Service</option>
-                        <option value="Dispatch">Dispatch/Control</option>
-                    </select>
+                    <label>Do you have tester experience? <span class="required-star">*</span></label>
+                    <div class="tester-group">
+                        <label class="tester-option"><input type="option" name="option" value="Yes" required> Yes</label>
+                        <label class="tester-option"><input type="option" name="option" value="No"> No</label>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Do you have a working microphone? <span class="required-star">*</span></label>
-                    <div class="radio-group">
-                        <label class="radio-option"><input type="radio" name="Microphone" value="Yes" required> Yes</label>
-                        <label class="radio-option"><input type="radio" name="Microphone" value="No"> No</label>
-                    </div>
+                  <div class="form-group">
+                    <label for="experience">Why do you want to become a tester?</label>
+                    <textarea id="experience" name="Why do you want to became a tester?" rows="4" placeholder=""></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="experience">Experience Summary</label>
-                    <textarea id="experience" name="Experience" rows="4" placeholder="Tell us about your RP history..."></textarea>
+                    <textarea id="experience" name="Experience" rows="4" placeholder="Tell us about your Tester Experience &  history..."></textarea>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">Send Submission</button>
