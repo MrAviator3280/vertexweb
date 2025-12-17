@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex - Community Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-primary: #A61B1B;
+            --color-background: #1A1A1A;
+            --color-background-light: #282828;
+            --color-text-main: #FFFFFF;
+            --color-text-subtle: #999999;
+            --font-family-main: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-main);
+            background-color: var(--color-background);
+            color: var(--color-text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background-color: var(--color-background-light);
+            padding: 40px;
+            border-radius: 10px;
+            border-top: 5px solid var(--color-primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 { color: var(--color-primary); margin-bottom: 10px; }
+        p.description { color: var(--color-text-subtle); margin-bottom: 30px; }
+
+        /* Input Styling */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .required-star { color: var(--color-primary); }
+
+        input[type="text"], 
+        input[type="email"], 
+        select, 
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #1A1A1A;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--color-primary);
+        }
+
+        /* Multiple Choice (Radio) Styling */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .radio-option input {
+            margin-right: 10px;
+            accent-color: var(--color-primary);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #8C1616;
+        }
+
+        /* Success Message */
+        #statusMessage {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="form-card">
+            <h1>Vertex Form</h1>
+            <p class="description">Please fill out all required fields below. Your response will be sent directly to our team.</p>
+
+            <form id="vertexForm">
+                <div class="form-group">
+                    <label for="discordUser">Discord Username <span class="required-star">*</span></label>
+                    <input type="text" id="discordUser" name="Discord User" placeholder="e.g. vertex_user" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Select Department <span class="required-star">*</span></label>
+                    <select id="department" name="Department" required>
+                        <option value="" disabled selected>Choose an option...</option>
+                        <option value="Police">Oxford Police</option>
+                        <option value="Fire">Fire & Rescue</option>
+                        <option value="Ambulance">Ambulance Service</option>
+                        <option value="Dispatch">Dispatch/Control</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Do you have a working microphone? <span class="required-star">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="Microphone" value="Yes" required> Yes</label>
+                        <label class="radio-option"><input type="radio" name="Microphone" value="No"> No</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">Experience Summary</label>
+                    <textarea id="experience" name="Experience" rows="4" placeholder="Tell us about your RP history..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Send Submission</button>
+            </form>
+            
+            <div id="statusMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        // REPLACE THIS WITH YOUR ACTUAL DISCORD WEBHOOK URL
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1450825269765083240/wglGLOF0wclmDolnQC0SXUtXG_QfTKMrt2JmONM-EMe9ZjYEoqjBpZd8rAOVU0Xe8438';
+
+        document.getElementById('vertexForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Sending...';
+
+            // Get form data
+            const formData = new FormData(this);
+            const formEntries = Object.fromEntries(formData.entries());
+
+            // Build the Discord Embed
+            const embedData = {
+                username: "Vertex Form Log",
+                avatar_url: "https://example.com/your-logo.png", // Optional: link to your logo
+                embeds: [{
+                    title: "New Application Received",
+                    color: 10885915, // Decimal for your red #A61B1B
+                    fields: Object.keys(formEntries).map(key => ({
+                        name: key,
+                        value: formEntries[key] || "No response",
+                        inline: true
+                    })),
+                    timestamp: new Date()
+                }]
+            };
+
+            // Send to Webhook
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(embedData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    statusMessage.style.color = "#4CAF50";
+                    statusMessage.innerText = "Application sent successfully!";
+                    this.reset();
+                } else {
+                    throw new Error();
+                }
+            })
+            .catch(err => {
+                statusMessage.style.color = "#f44336";
+                statusMessage.innerText = "Error sending application. Please try again.";
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Send Submission';
+            });
+        });
+    </script>
+</body>
+</html>
