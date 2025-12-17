@@ -2,159 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex - API Console</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
-    
+    <title>Vertex - Management Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --color-primary: #A61B1B;
-            --color-bg: #0F0F0F;
-            --color-card: #161616;
-            --color-text: #FFFFFF;
-            --color-subtle: #888888;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--color-bg);
-            color: var(--color-text);
-            margin: 0;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden;
-        }
-
-        .container { width: 100%; max-width: 500px; padding: 20px; }
-
-        .card {
-            background: var(--color-card);
-            padding: 30px;
-            border-radius: 12px;
-            border-top: 4px solid var(--color-primary);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        h2 { margin-top: 0; font-size: 1.5rem; letter-spacing: 1px; }
-        label { display: block; margin-bottom: 5px; font-size: 0.8rem; color: var(--color-subtle); text-transform: uppercase; font-weight: 600; }
-
-        input {
-            width: 100%; padding: 12px; margin-bottom: 15px;
-            background: #0A0A0A; border: 1px solid #333;
-            border-radius: 6px; color: white; outline: none; box-sizing: border-box;
-            font-family: inherit;
-        }
-
-        input:focus { border-color: var(--color-primary); }
-
-        .btn {
-            width: 100%; padding: 12px;
-            background: var(--color-primary); border: none;
-            color: white; font-weight: 700; border-radius: 6px;
-            cursor: pointer; transition: 0.2s; text-transform: uppercase;
-        }
-
-        .btn:hover { background: #8C1616; }
-        .btn:disabled { background: #444; cursor: not-allowed; }
-
-        .terminal {
-            margin-top: 20px;
-            background: #000;
-            border-radius: 6px;
-            padding: 15px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.75rem;
-            height: 120px;
-            overflow-y: auto;
-            border: 1px solid #222;
-        }
-
-        .log-entry { margin-bottom: 4px; padding-left: 8px; border-left: 2px solid #333; }
-        .log-info { border-color: var(--color-primary); color: #ccc; }
-        .log-success { border-color: #4CAF50; color: #4CAF50; }
-        .log-error { border-color: #ff4d4d; color: #ff4d4d; font-weight: bold; }
+        :root { --primary: #A61B1B; --bg: #0F0F0F; --card: #161616; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: white; padding: 20px; }
+        .server-select { padding: 10px; background: var(--card); color: white; border: 1px solid #333; border-radius: 5px; width: 100%; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--card); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #222; }
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-right: 5px; }
+        .btn-kick { background: #ffa502; color: black; }
+        .btn-ban { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="card">
-            <h2 style="color: var(--color-primary);">Vertex <span style="color: white;">Console</span></h2>
-            
-            <label>Server ID</label>
-            <input type="text" id="serverId" placeholder="ID from Oxford Docs">
+    <h2>Vertex <span style="color: var(--primary)">Modview</span></h2>
 
-            <label>API Key</label>
-            <input type="password" id="apiKey" placeholder="VTX_...">
+    <label>Active Management Server:</label>
+    <select id="serverList" class="server-select" onchange="loadPlayers(this.value)">
+        <option value="">Select a server you manage...</option>
+    </select>
 
-            <label>Command</label>
-            <input type="text" id="cmdInput" placeholder="kick PlayerName" onkeydown="if(event.key==='Enter') executeCommand()">
-
-            <button class="btn" id="execBtn" onclick="executeCommand()">Execute Command</button>
-
-            <div class="terminal" id="terminal">
-                <div class="log-entry log-info">Vertex Terminal v1.1 Active.</div>
-            </div>
-        </div>
-    </div>
+    <table id="playerTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>Roblox User</th>
+                <th>Team</th>
+                <th>Callsign</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="playerBody"></tbody>
+    </table>
 
     <script>
-        async function executeCommand() {
-            const serverId = document.getElementById('serverId').value.trim();
-            const apiKey = document.getElementById('apiKey').value.trim();
-            const rawCmd = document.getElementById('cmdInput').value.trim();
-            const btn = document.getElementById('execBtn');
-
-            if (!serverId || !apiKey || !rawCmd) {
-                log("MISSING DATA: Fill all fields.", "log-error");
-                return;
-            }
-
-            const cleanCmd = rawCmd.startsWith('/') ? rawCmd.substring(1) : rawCmd;
+        // On Page Load: Get manageable servers
+        async function init() {
+            const res = await fetch('/api/user-servers');
+            const servers = await res.json();
+            const select = document.getElementById('serverList');
             
-            btn.disabled = true;
-            log(`CALLing POST: ${cleanCmd}...`, "log-info");
-
-            try {
-// Replace the fetch line with this:
-const response = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.oxfd.re/v1/server/command'), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': '*/*',
-                        'server-key': apiKey,
-                        'server-id': serverId
-                    },
-                    body: JSON.stringify({ command: cleanCmd })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    log(`SUCCESS: ${data.message || 'Command executed.'}`, "log-success");
-                } else {
-                    // This pulls the actual error code and message from the API
-                    log(`API ERROR [${response.status}]: ${data.message || 'Unknown Error'}`, "log-error");
-                }
-
-            } catch (error) {
-                // This catches network issues (e.g. no internet, site down)
-                log(`NET ERROR: ${error.message}`, "log-error");
-            } finally {
-                btn.disabled = false;
-                document.getElementById('cmdInput').value = "";
-            }
+            servers.forEach(s => {
+                select.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+            });
         }
 
-        function log(msg, className = "") {
-            const terminal = document.getElementById('terminal');
-            const div = document.createElement('div');
-            div.className = "log-entry " + className;
-            const time = new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        async function loadPlayers(guildId) {
+            if(!guildId) return;
+            document.getElementById('playerTable').style.display = "table";
             
-            div.innerText = `[${time}] ${msg}`;
-            terminal.appendChild(div);
-            terminal.scrollTop = terminal.scrollHeight;
+            const res = await fetch(`/api/players/${guildId}`);
+            const players = await res.json(); //
+            const tbody = document.getElementById('playerBody');
+            
+            tbody.innerHTML = players.map(p => `
+                <tr>
+                    <td><strong>${p.Username}</strong><br><small>${p.DisplayName}</small></td>
+                    <td>${p.Team}</td>
+                    <td>${p.Callsign || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-kick" onclick="executeMod('kick', '${p.Username}')">Kick</button>
+                        <button class="btn btn-ban" onclick="executeMod('ban', '${p.Username}')">Ban</button>
+                    </td>
+                </tr>
+            `).join('');
         }
+
+        async function executeMod(type, username) {
+            const guildId = document.getElementById('serverList').value;
+            const reason = prompt(`Enter ${type} reason for ${username}:`);
+            if (!reason) return;
+
+            const res = await fetch('/api/execute-command', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ guildId, type, targetUser: username, reason })
+            });
+
+            const result = await res.json();
+            alert(result.message || "Error");
+            loadPlayers(guildId); // Refresh table
+        }
+
+        init();
     </script>
 </body>
 </html>
