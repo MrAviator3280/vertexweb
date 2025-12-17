@@ -30,7 +30,6 @@
             padding: 20px;
         }
 
-        /* Form Card */
         .form-card {
             background-color: var(--color-background-light);
             padding: 40px;
@@ -42,7 +41,6 @@
         h1 { color: var(--color-primary); margin-bottom: 10px; }
         p.description { color: var(--color-text-subtle); margin-bottom: 30px; }
 
-        /* Input Styling */
         .form-group {
             margin-bottom: 25px;
         }
@@ -67,6 +65,7 @@
             color: white;
             font-family: inherit;
             outline: none;
+            box-sizing: border-box; /* Ensures padding doesn't break width */
             transition: border-color 0.3s;
         }
 
@@ -74,7 +73,6 @@
             border-color: var(--color-primary);
         }
 
-        /* Multiple Choice (Radio) Styling */
         .radio-group {
             display: flex;
             flex-direction: column;
@@ -86,6 +84,7 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            margin-bottom: 10px;
         }
 
         .radio-option input {
@@ -93,7 +92,6 @@
             accent-color: var(--color-primary);
         }
 
-        /* Submit Button */
         .submit-btn {
             background-color: var(--color-primary);
             color: white;
@@ -111,7 +109,6 @@
             background-color: #8C1616;
         }
 
-        /* Success Message */
         #statusMessage {
             margin-top: 20px;
             text-align: center;
@@ -140,14 +137,14 @@
                     </div>
                 </div>
 
-                  <div class="form-group">
-                    <label for="experience">Why do you want to become a tester?<span class="required-star">*</span></label>
-                    <textarea id="experience" name="Why do you want to became a tester?" rows="4" placeholder="I want to became a tester because..." required>
+                <div class="form-group">
+                    <label for="whyTester">Why do you want to become a tester?<span class="required-star">*</span></label>
+                    <textarea id="whyTester" name="Motivation" rows="4" placeholder="I want to become a tester because..." required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="experience">Experience Summary</label>
-                    <textarea id="experience" name="Experience" rows="4" placeholder="Tell us about your Tester Experience &  history..."></textarea>
+                    <textarea id="experience" name="Experience" rows="4" placeholder="Tell us about your Tester Experience & history..."></textarea>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">Send Submission</button>
@@ -158,7 +155,7 @@
     </div>
 
     <script>
-        // REPLACE THIS WITH YOUR ACTUAL DISCORD WEBHOOK URL
+        // NOTE: Keeping your webhook URL as provided
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1450825269765083240/wglGLOF0wclmDolnQC0SXUtXG_QfTKMrt2JmONM-EMe9ZjYEoqjBpZd8rAOVU0Xe8438';
 
         document.getElementById('vertexForm').addEventListener('submit', function(e) {
@@ -170,27 +167,23 @@
             submitBtn.disabled = true;
             submitBtn.innerText = 'Sending...';
 
-            // Get form data
             const formData = new FormData(this);
             const formEntries = Object.fromEntries(formData.entries());
 
-            // Build the Discord Embed
             const embedData = {
                 username: "Vertex Form Log",
-                avatar_url: "https://example.com/your-logo.png", // Optional: link to your logo
                 embeds: [{
                     title: "New Application Received",
-                    color: 10885915, // Decimal for your red #A61B1B
+                    color: 10885915, 
                     fields: Object.keys(formEntries).map(key => ({
                         name: key,
                         value: formEntries[key] || "No response",
-                        inline: true
+                        inline: key === "Discord User" || key === "TesterExp" // Only inline short fields
                     })),
                     timestamp: new Date()
                 }]
             };
 
-            // Send to Webhook
             fetch(DISCORD_WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -202,7 +195,7 @@
                     statusMessage.innerText = "Application sent successfully!";
                     this.reset();
                 } else {
-                    throw new Error();
+                    throw new Error('Webhook failed');
                 }
             })
             .catch(err => {
