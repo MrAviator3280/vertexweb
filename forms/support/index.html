@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex - Support Team Application</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+
+    <style>
+        :root {
+            --color-primary: #A61B1B;
+            --color-background: #1A1A1A;
+            --color-background-light: #282828;
+            --color-text-main: #FFFFFF;
+            --color-text-subtle: #999999;
+            --font-family-main: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-main);
+            background-color: var(--color-background);
+            color: var(--color-text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .form-card {
+            background-color: var(--color-background-light);
+            padding: 40px;
+            border-radius: 10px;
+            border-top: 5px solid var(--color-primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        p.description {
+            color: var(--color-text-subtle);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .required-star {
+            color: var(--color-primary);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #1A1A1A;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--color-primary);
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .radio-option input {
+            margin-right: 10px;
+            accent-color: var(--color-primary);
+        }
+
+        .submit-btn {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #8C1616;
+        }
+
+        #statusMessage {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-card">
+        <h1>Vertex Support Team Application</h1>
+        <p class="description">
+            Please complete this application fully and honestly. Applications with low effort may be denied.
+        </p>
+
+        <form id="vertexForm">
+
+            <div class="form-group">
+                <label>Discord Username <span class="required-star">*</span></label>
+                <input type="text" name="Discord User" placeholder="username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Age <span class="required-star">*</span></label>
+                <input type="text" name="Age" placeholder="e.g. 16" required>
+            </div>
+
+            <div class="form-group">
+                <label>Timezone <span class="required-star">*</span></label>
+                <input type="text" name="Timezone" placeholder="e.g. GMT / BST / EST" required>
+            </div>
+
+            <div class="form-group">
+                <label>How active can you be per day? <span class="required-star">*</span></label>
+                <input type="text" name="Daily Activity" placeholder="e.g. 2–4 hours" required>
+            </div>
+
+            <div class="form-group">
+                <label>Do you have previous support or moderation experience? <span class="required-star">*</span></label>
+                <label class="radio-option"><input type="radio" name="Previous Experience" value="Yes" required> Yes</label>
+                <label class="radio-option"><input type="radio" name="Previous Experience" value="No"> No</label>
+            </div>
+
+            <div class="form-group">
+                <label>If yes, please explain your experience</label>
+                <textarea name="Experience Details" rows="4" placeholder="Servers, roles, responsibilities..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Why do you want to join the Vertex Support Team? <span class="required-star">*</span></label>
+                <textarea name="Motivation" rows="5" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>What skills or qualities would make you a good support member? <span class="required-star">*</span></label>
+                <textarea name="Strengths" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>How would you handle an angry or upset user? <span class="required-star">*</span></label>
+                <textarea name="Conflict Handling" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>What would you do if you were unsure how to answer a support ticket? <span class="required-star">*</span></label>
+                <textarea name="Uncertain Scenario" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>What are your weaknesses or areas you want to improve?</label>
+                <textarea name="Weaknesses" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Anything else you'd like us to know?</label>
+                <textarea name="Additional Info" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Send Application
+            </button>
+
+        </form>
+
+        <div id="statusMessage"></div>
+    </div>
+</div>
+
+<script>
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1450825269765083240/wglGLOF0wclmDolnQC0SXUtXG_QfTKMrt2JmONM-EMe9ZjYEoqjBpZd8rAOVU0Xe8438';
+
+    document.getElementById('vertexForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMessage = document.getElementById('statusMessage');
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Sending...';
+
+        const formData = new FormData(this);
+        const formEntries = Object.fromEntries(formData.entries());
+
+        const embedData = {
+            username: "Vertex Applications",
+            embeds: [{
+                title: "New Support Team Application",
+                color: 10885915,
+                fields: Object.keys(formEntries).map(key => ({
+                    name: key,
+                    value: formEntries[key] || "No response",
+                    inline: false
+                })),
+                timestamp: new Date()
+            }]
+        };
+
+        fetch(DISCORD_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(embedData)
+        })
+        .then(res => {
+            if (!res.ok) throw new Error();
+            statusMessage.style.color = "#4CAF50";
+            statusMessage.innerText = "Application sent successfully!";
+            this.reset();
+        })
+        .catch(() => {
+            statusMessage.style.color = "#f44336";
+            statusMessage.innerText = "Failed to send application. Please try again.";
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Send Application';
+        });
+    });
+</script>
+
+</body>
+</html>
